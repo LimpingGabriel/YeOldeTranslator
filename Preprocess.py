@@ -1,3 +1,9 @@
+######
+#HYPERPARAMETERS#
+max_words = 25 #Max words to use in any sentence for RNN
+
+######
+
 import os
 import re
 
