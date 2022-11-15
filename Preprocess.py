@@ -13,9 +13,9 @@ def read_dataset():
     tran = df["t"].to_list()
     return og, tran
 
-def add_SOSEOS(sentences):
+def add_soseos(sentences):
     for i in range(len(sentences)):
-        sentences[i] = "<\SOS>" + sentences[i] + "<\EOS>"
+        sentences[i] = "</SOS> " + sentences[i] + " </EOS>"
     return sentences
 
 def clean_sentences(sentences):
@@ -35,6 +35,7 @@ def clean_sentences(sentences):
 
         cleaned_sentences.append(cleaned_sentence)
 
+    cleaned_sentences = add_soseos(cleaned_sentences)
     return cleaned_sentences
 
 def tokenize(sentences):
@@ -45,12 +46,11 @@ if __name__ == "__main__":
     
     X_sentences = clean_sentences(X_raw)
     Y_sentences = clean_sentences(y_raw)
-
+    
     print(X_raw[0:5])
+    print(X_sentences[0:5])
 
     Xtkn = Tokenizer()
 
     Xtkn.fit_on_texts(X_sentences)
-
-
     X_train = Xtkn.texts_to_sequences(X_sentences)
