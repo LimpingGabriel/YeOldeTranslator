@@ -1,0 +1,6 @@
+.vs/
+Datasets/
+
+*.sln
+*.pyproj
+*.user
