@@ -1,6 +1,6 @@
 ######
 #HYPERPARAMETERS#
-max_words = 25 #Max words to use in any sentence for RNN
+MAX_WORDS = 25 #Max words to use in any sentence for RNN
 
 ######
 
@@ -14,8 +14,8 @@ import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-def read_dataset():
-    df = pd.read_csv(os.path.join(os.getcwd(), "Datasets/Shakespeare/shakespeare.csv"))
+def load_sentences(path):
+    df = pd.read_csv(os.path.abspath(path))
     og = df["og"].to_list()
     tran = df["t"].to_list()
     return og, tran
@@ -45,20 +45,3 @@ def clean_sentences(sentences):
     cleaned_sentences = add_soseos(cleaned_sentences)
     return cleaned_sentences
 
-if __name__ == "__main__":
-    X_raw, y_raw = read_dataset()
-    
-    X_sentences = clean_sentences(X_raw)
-    Y_sentences = clean_sentences(y_raw)
-    
-    print(X_raw[0:5])
-    print(X_sentences[0:5])
-
-    Xtkn = Tokenizer()
-
-    Xtkn.fit_on_texts(X_sentences)
-    X_train = Xtkn.texts_to_sequences(X_sentences)
-
-    #PAD SEQUENCES
-
-    print(X_train[0:5])
