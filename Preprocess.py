@@ -6,6 +6,7 @@ import numpy as np
 
 import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 def read_dataset():
     df = pd.read_csv(os.path.join(os.getcwd(), "Datasets/Shakespeare/shakespeare.csv"))
@@ -38,9 +39,6 @@ def clean_sentences(sentences):
     cleaned_sentences = add_soseos(cleaned_sentences)
     return cleaned_sentences
 
-def tokenize(sentences):
-    pass
-
 if __name__ == "__main__":
     X_raw, y_raw = read_dataset()
     
@@ -54,3 +52,7 @@ if __name__ == "__main__":
 
     Xtkn.fit_on_texts(X_sentences)
     X_train = Xtkn.texts_to_sequences(X_sentences)
+
+    #PAD SEQUENCES
+
+    print(X_train[0:5])
