@@ -13,6 +13,7 @@ import numpy as np
 import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.utils.np_utils import to_categorical
 
 def load_sentences(path):
     df = pd.read_csv(os.path.abspath(path))
@@ -45,3 +46,16 @@ def clean_sentences(sentences):
     cleaned_sentences = add_soseos(cleaned_sentences)
     return cleaned_sentences
 
+def one_hot(sequences, vocab_size):
+    yl = list()
+    for sequence in sequences:
+        enc = to_categorical(sequence, num_classes=vocab_size)
+        yl.append(enc)
+    y_out = np.array(yl)
+    y_out = y_out.reshape(sequences.shape[0], sequences.shape[1], vocab_size)
+    return y_out
+
+def labels_to_text(labels, tkn):
+    index_to_words = {i: word for word, i in tkn.word_index.items()}
+    index_to_words[0] = "</PAD>"
+    return " ".join([index_to_words[pred] for pred in np.argmax(labels, 1)])
