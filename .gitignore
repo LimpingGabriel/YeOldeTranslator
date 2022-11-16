@@ -9,3 +9,5 @@ Datasets/
 *.p
 *.index
 *.data-*
+*.txt
+*.zip
