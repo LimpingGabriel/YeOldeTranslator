@@ -13,6 +13,10 @@ class TextDataset(object):
     def __init__(self, dstype, dirname=""):
         self.dstype = dstype
         self.dirname = dirname
+        self.src_vocab = None
+        self.tar_vocab = None
+        self.raw_sentences = None
+
         settings.logger.info("Created {} TextDataset.".format(self.dstype))
 
     def load_data(self):
@@ -47,8 +51,26 @@ class TextDataset(object):
             **bert_vocab_args)
         settings.logger.debug("Created target vocabulary.")
 
+        settings.logger.info("Created vocabulary.")
+
         self.write_vocab_file(os.path.abspath("{}src_vocab.txt".format(self.dirname)), self.src_vocab)
         settings.logger.debug("Wrote source vocabulary file.")
 
         self.write_vocab_file(os.path.abspath("{}tar_vocab.txt".format(self.dirname)), self.tar_vocab)
         settings.logger.debug("Wrote target vocabulary file.")
+
+        settings.logger.info("Created vocabulary files.")
+
+    def build_tokenizer(self):
+        if (not os.path.isfile("{}src_vocab.txt".format(self.dirname))) or (not os.path.isfile("{}tar_vocab.txt".format(self.dirname))):
+            settings.logger.warn("BERT Vocabulary file(s) missing.")
+            if (self.raw_sentences is None):
+                settings.logger.warn("{} Dataset has not been loaded.".format(self.dstype))
+                self.load_data()
+            self.generate_vocabulary()
+        else:
+            settings.logger.debug("Found vocabulary files.")
+
+
+        ##
+        
