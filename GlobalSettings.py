@@ -17,6 +17,11 @@ class GlobalSettings(object):
         self.bert_reserved_tokens = ["[PAD]", "[UNK]", "[START]", "[END]"]
         self.bert_tokenizer_params = dict(lower_case=True)
 
+        # Hyperparameters
+        self.MAX_TOKENS = 128
+        self.BUFFER_SIZE = 20000
+        self.BATCH_SIZE = 64
+
 
 
 

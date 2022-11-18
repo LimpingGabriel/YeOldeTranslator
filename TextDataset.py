@@ -3,9 +3,11 @@ import os
 
 from tensorflow_text.tools.wordpiece_vocab import bert_vocab_from_dataset as bert_vocab
 import tensorflow_text as tf_text
+import tensorflow as tf
 
 from Shakespeare import load_shakespeare
 from GlobalSettings import GlobalSettings
+from CustomTokenizer import CustomTokenizer
 
 settings = GlobalSettings()
 
@@ -17,6 +19,7 @@ class TextDataset(object):
         self.src_vocab = None
         self.tar_vocab = None
         self.raw_sentences = None
+        self.tokenizers = None
 
         settings.logger.info("Created {} TextDataset.".format(self.dstype))
 
@@ -65,7 +68,7 @@ class TextDataset(object):
 
         settings.logger.info("Created vocabulary files.")
 
-    def build_tokenizer(self):
+    def build_tokenizers(self):
         if (not os.path.isfile("{}src_vocab.txt".format(self.dirname))) or (not os.path.isfile("{}tar_vocab.txt".format(self.dirname))):
             settings.logger.warn("BERT Vocabulary file(s) missing.")
             self.generate_vocabulary()
@@ -78,3 +81,51 @@ class TextDataset(object):
         tar_tokenizer = tf_text.BertTokenizer(os.path.abspath("{}tar_vocab.txt".format(self.dirname)), **settings.bert_tokenizer_params)
         settings.logger.debug("Created target tokenizer.")
 
+        self.tokenizers = tf.Module()
+        self.tokenizers.src = CustomTokenizer(settings.bert_reserved_tokens, os.path.abspath("{}src_vocab.txt".format(self.dirname)))
+        self.tokenizers.tar = CustomTokenizer(settings.bert_reserved_tokens, os.path.abspath("{}tar_vocab.txt".format(self.dirname)))
+        
+        settings.logger.debug("Created tokenizer module.")
+
+        model_name = "{}tokenizer".format(self.dirname)
+
+        tf.saved_model.save(self.tokenizers, model_name)
+        settings.logger.info("Built and saved tokenizer.")
+
+    def load_tokenizers(self):
+        if self.tokenizers == None:
+            try:
+                self.tokenizers = tf.saved_model.load("{}tokenizer".format(self.dirname))
+            except (OSError, IOError) as e:
+                settings.logger.warn("No tokenizer file found at {}.".format(self.dirname))
+                self.build_tokenizers()
+
+        settings.logger.info("Loaded tokenizer.")
+
+    def prepare_batch(self, src, tar):
+        src = self.tokenizers.src.tokenize(src)
+        src = src[:, :settings.MAX_TOKENS]
+        src = src.to_tensor()
+
+        tar = self.tokenizers.tar.tokenize(tar)
+        tar = tar[:, :(settings.MAX_TOKENS+1)]
+        tar_inputs = tar[:, :-1].to_tensor()
+        tar_labels = tar[:, 1:].to_tensor()
+
+        return (src, tar_inputs), tar_labels
+
+    def make_batches(self, train_test_split=1):
+        ##WORK OUT TRAIN-TEST-split
+        return (
+            self.raw_sentences
+            .shuffle(settings.BUFFER_SIZE)
+            .batch(settings.BATCH_SIZE)
+            .map(prepare_batch, tf.data.AUTOTUNE)
+            .prefetch(buffer_size=tf.data.AUTOTUNE)
+            )
+
+
+    def prepare(self):
+        """Used to fully load the dataset ready-to-go for training."""
+        self.load_data()
+        self.load_tokenizers()
