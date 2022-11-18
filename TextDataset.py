@@ -2,6 +2,7 @@ import os
 
 
 from tensorflow_text.tools.wordpiece_vocab import bert_vocab_from_dataset as bert_vocab
+import tensorflow_text as tf_text
 
 from Shakespeare import load_shakespeare
 from GlobalSettings import GlobalSettings
@@ -31,6 +32,9 @@ class TextDataset(object):
                 print(token, file=f)
 
     def generate_vocabulary(self):
+        if (self.raw_sentences is None):
+            settings.logger.warn("{} Dataset has not been loaded.".format(self.dstype))
+            self.load_data()
         train_tar = self.raw_sentences.map(lambda src, en: en)
         train_src = self.raw_sentences.map(lambda tar, en: tar)
         settings.logger.debug("Loaded source and target tensors for BERT.")
@@ -64,13 +68,12 @@ class TextDataset(object):
     def build_tokenizer(self):
         if (not os.path.isfile("{}src_vocab.txt".format(self.dirname))) or (not os.path.isfile("{}tar_vocab.txt".format(self.dirname))):
             settings.logger.warn("BERT Vocabulary file(s) missing.")
-            if (self.raw_sentences is None):
-                settings.logger.warn("{} Dataset has not been loaded.".format(self.dstype))
-                self.load_data()
             self.generate_vocabulary()
         else:
             settings.logger.debug("Found vocabulary files.")
 
+        src_tokenizer = tf_text.BertTokenizer(os.path.abspath("{}src_vocab.txt".format(self.dirname)), **settings.bert_tokenizer_params)
+        settings.logger.debug("Created source tokenizer.")
 
-        ##
-        
+        tar_tokenizer = tf_text.BertTokenizer(os.path.abspath("{}tar_vocab.txt".format(self.dirname)), **settings.bert_tokenizer_params)
+        settings.logger.debug("Created target tokenizer.")
