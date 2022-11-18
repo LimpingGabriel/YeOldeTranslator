@@ -77,3 +77,4 @@ class TextDataset(object):
 
         tar_tokenizer = tf_text.BertTokenizer(os.path.abspath("{}tar_vocab.txt".format(self.dirname)), **settings.bert_tokenizer_params)
         settings.logger.debug("Created target tokenizer.")
+
