@@ -1,12 +1,13 @@
-from keras.layers import Layer
-from keras.layers import Dropout
-from PositionalEmbedding import PositionalEmbedding
-from DecoderLayer import DecoderLayer
+import tensorflow as tf
+from tensorflow.keras.layers import Layer
+from tensorflow.keras.layers import Dropout
+from transformer.layers.PositionalEmbedding import PositionalEmbedding
+from transformer.layers.DecoderLayer import DecoderLayer
 
 class Decoder(Layer):
     """description of class"""
 
-    def __init__(self, *, num_layers, d_model, num_heads, dff, vocab_size, dropout=0.1):
+    def __init__(self, *, num_layers, d_model, num_heads, dff, vocab_size, dropout_rate=0.1):
         super(Decoder, self).__init__()
 
         self.d_model = d_model
@@ -26,14 +27,14 @@ class Decoder(Layer):
 
         self.last_attn_scores = None
 
-        def call(self, x):
-            x = self.pos_embedding(x)
-            x = self.dropout(x)
-            for i in range(self.num_layers):
-                x = self.dec_layers[i](x, context)
+    def call(self, x, context):
+        x = self.pos_embedding(x)
+        x = self.dropout(x)
+        for i in range(self.num_layers):
+            x = self.dec_layers[i](x, context)
 
-            self.last_attn_scores = self.dec_layers[-1].last_attn_scores
-            return x
+        self.last_attn_scores = self.dec_layers[-1].last_attn_scores
+        return x
 
 
 

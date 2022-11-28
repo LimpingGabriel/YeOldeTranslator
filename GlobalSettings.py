@@ -22,6 +22,12 @@ class GlobalSettings(object):
         self.BUFFER_SIZE = 20000
         self.BATCH_SIZE = 64
 
+        self.TRANSFORMER_NUM_LAYERS = 2
+        self.TRANSFORMER_D_MODEL = 64
+        self.TRANSFORMER_DFF = 256
+        self.TRANSFORMER_NUM_HEADS = 4
+        self.TRANSFORMER_DROPOUT_RATE = 0.1
+
 
 
 

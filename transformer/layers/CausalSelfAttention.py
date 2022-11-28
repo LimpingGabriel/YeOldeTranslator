@@ -1,4 +1,4 @@
-from BaseAttention import BaseAttention
+from transformer.layers.BaseAttention import BaseAttention
 
 class CausalSelfAttention(BaseAttention):
     """description of class"""

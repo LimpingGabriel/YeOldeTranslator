@@ -5,8 +5,8 @@ import tensorflow as tf
 def positional_encoding(length, depth):
     depth = depth/2
 
-    positions = np.arrange(length)[:, np.newaxis]
-    depths = np.arrange(depth)[np.newaxis, :]/depth
+    positions = np.arange(length)[:, np.newaxis]
+    depths = np.arange(depth)[np.newaxis, :]/depth
 
     angle_rates = 1 / (10000 ** depths)
     angle_rads = positions * angle_rates
@@ -18,7 +18,7 @@ def positional_encoding(length, depth):
 
 
 
-class PositionalEmbedding(object):
+class PositionalEmbedding(tf.keras.layers.Layer):
     """description of class"""
 
     def __init__(self, vocab_size, d_model):

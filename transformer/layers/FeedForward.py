@@ -1,9 +1,11 @@
-from keras.layers import Layer
-from keras.layers import Dense
-from keras.layers import Dropout
-from keras.layers import Add
-from keras.layers import LayerNormalization
-from keras import Sequential
+import tensorflow as tf
+
+from tensorflow.keras.layers import Layer
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.layers import Add
+from tensorflow.keras.layers import LayerNormalization
+from tensorflow.keras import Sequential
 
 class FeedForward(Layer):
     """description of class"""

@@ -1,6 +1,7 @@
-from keras.layers import Layer
-from GlobalSelfAttention import GlobalSelfAttention
-from FeedForward import FeedForward
+import tensorflow as tf
+from tensorflow.keras.layers import Layer
+from transformer.layers.GlobalSelfAttention import GlobalSelfAttention
+from transformer.layers.FeedForward import FeedForward
 
 class EncoderLayer(Layer):
     """description of class"""
@@ -10,7 +11,7 @@ class EncoderLayer(Layer):
         self.self_attention = GlobalSelfAttention(
             num_heads = num_heads,
             key_dim = d_model,
-            dropout_rate = dropout_rate)
+            dropout = dropout_rate)
 
         self.ffn = FeedForward(d_model, dff)
 

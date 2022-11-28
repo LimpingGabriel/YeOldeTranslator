@@ -1,7 +1,8 @@
-from keras.layers import Layer
-from keras.layers import Dropout
-from PositionalEmbedding import PositionalEmbedding
-from EncoderLayer import EncoderLayer
+import tensorflow as tf
+from tensorflow.keras.layers import Layer
+from tensorflow.keras.layers import Dropout
+from transformer.layers.PositionalEmbedding import PositionalEmbedding
+from transformer.layers.EncoderLayer import EncoderLayer
 
 class Encoder(Layer):
     """description of class"""
@@ -26,14 +27,14 @@ class Encoder(Layer):
         self.dropout = Dropout(dropout_rate)
 
 
-        def call(self, x):
-            x = self.pos_embedding(x)
-            x = self.dropout(x)
+    def call(self, x):
+        x = self.pos_embedding(x)
+        x = self.dropout(x)
 
-            for i in range(self.num_layers):
-                x = self.enc_layers[i](x)
+        for i in range(self.num_layers):
+            x = self.enc_layers[i](x)
 
-            return x
+        return x
 
 
 
