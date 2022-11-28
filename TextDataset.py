@@ -25,7 +25,7 @@ class TextDataset(object):
 
     def load_data(self):
         if self.dstype == "SNShakespeare":
-            self.raw_sentences = load_shakespeare()
+            self.raw_sentences = load_shakespeare().shuffle(settings.BUFFER_SIZE)
         
         settings.logger.info("Loaded {} dataset.".format(self.dstype))
     
@@ -116,13 +116,26 @@ class TextDataset(object):
 
     def make_batches(self, train_test_split=1):
         ##WORK OUT TRAIN-TEST-split
-        return (
-            self.raw_sentences
+        shuffled_sentences = self.raw_sentences.shuffle(settings.BUFFER_SIZE)
+
+        train_raw = shuffled_sentences.take(int(train_test_split * self.raw_sentences.cardinality().numpy()))
+        test_raw = shuffled_sentences.skip(int(train_test_split * self.raw_sentences.cardinality().numpy()))
+
+        return ((
+            train_raw
             .shuffle(settings.BUFFER_SIZE)
             .batch(settings.BATCH_SIZE)
-            .map(prepare_batch, tf.data.AUTOTUNE)
+            .map(self.prepare_batch, tf.data.AUTOTUNE)
             .prefetch(buffer_size=tf.data.AUTOTUNE)
-            )
+            ),
+            
+            (
+            test_raw
+            .shuffle(settings.BUFFER_SIZE)
+            .batch(settings.BATCH_SIZE)
+            .map(self.prepare_batch, tf.data.AUTOTUNE)
+            .prefetch(buffer_size=tf.data.AUTOTUNE)
+            ))
 
 
     def prepare(self):
