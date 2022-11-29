@@ -20,13 +20,14 @@ class GlobalSettings(object):
         # Hyperparameters
         self.MAX_TOKENS = 128
         self.BUFFER_SIZE = 20000
-        self.BATCH_SIZE = 64
+        self.BATCH_SIZE = 32
 
-        self.TRANSFORMER_NUM_LAYERS = 2
-        self.TRANSFORMER_D_MODEL = 64
-        self.TRANSFORMER_DFF = 256
-        self.TRANSFORMER_NUM_HEADS = 4
-        self.TRANSFORMER_DROPOUT_RATE = 0.1
+        self.NUM_EPOCHS = 200
+        self.TRANSFORMER_NUM_LAYERS = 4 #4
+        self.TRANSFORMER_D_MODEL = 128 # 128
+        self.TRANSFORMER_DFF = 512 # 512
+        self.TRANSFORMER_NUM_HEADS = 8 # 8
+        self.TRANSFORMER_DROPOUT_RATE = 0.1 # 0.1
 
 
 

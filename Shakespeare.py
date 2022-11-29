@@ -4,10 +4,11 @@ import io
 from GlobalSettings import GlobalSettings
 import tensorflow as tf
 import numpy as np
+import pandas as pd
 
 settings = GlobalSettings()
 
-def load_shakespeare():
+def load_snshakespeare():
     """Returns tf.data.Dataset from shakespeare dataset."""
 
     original = []
@@ -38,7 +39,24 @@ def load_shakespeare():
     settings.logger.info("Loaded {} samples.".format(len(original)))
     return data
 
+def load_shakescleare():
+    """Returns tf.data.Dataset from shakespeare dataset."""
 
+    fdir = "Datasets\Shakespeare\shakespeare.csv"
+    df = pd.read_csv(fdir)
+
+    original = df["og"].tolist()
+    modern = df["t"].tolist()
+    settings.logger.debug("Loaded {}.".format(fdir))
+    
+    if len(original) != len(modern):
+        settings.logger.critical("Original length {} does not match modern length {}!".format(len(original), len(modern)))
+        raise AssertionError()
+
+    data = tf.data.Dataset.from_tensor_slices((modern, original))
+    settings.logger.info("Loaded {} samples.".format(len(original)))
+    return data
 
 if __name__ == "__main__":
-    load_shakespeare()
+    pass
+    #load_snshakespeare()

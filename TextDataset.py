@@ -5,7 +5,7 @@ from tensorflow_text.tools.wordpiece_vocab import bert_vocab_from_dataset as ber
 import tensorflow_text as tf_text
 import tensorflow as tf
 
-from Shakespeare import load_shakespeare
+from Shakespeare import *
 from GlobalSettings import GlobalSettings
 from CustomTokenizer import CustomTokenizer
 
@@ -25,7 +25,9 @@ class TextDataset(object):
 
     def load_data(self):
         if self.dstype == "SNShakespeare":
-            self.raw_sentences = load_shakespeare().shuffle(settings.BUFFER_SIZE)
+            self.raw_sentences = load_snshakespeare().shuffle(settings.BUFFER_SIZE)
+        if self.dstype == "Shakescleare":
+            self.raw_sentences = load_shakescleare().shuffle(settings.BUFFER_SIZE)
         
         settings.logger.info("Loaded {} dataset.".format(self.dstype))
     
