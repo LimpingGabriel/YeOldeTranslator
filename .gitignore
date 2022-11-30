@@ -12,3 +12,5 @@ Datasets/
 *.txt
 *.zip
 *.pb
+*.metadata
+*.snapshot

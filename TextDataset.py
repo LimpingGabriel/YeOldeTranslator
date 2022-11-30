@@ -116,23 +116,33 @@ class TextDataset(object):
 
         return (src, tar_inputs), tar_labels
 
-    def make_batches(self, train_test_split=1):
-        ##WORK OUT TRAIN-TEST-split
+    def make_split(self, train_test_split=1):
         shuffled_sentences = self.raw_sentences.shuffle(settings.BUFFER_SIZE)
 
-        train_raw = shuffled_sentences.take(int(train_test_split * self.raw_sentences.cardinality().numpy()))
-        test_raw = shuffled_sentences.skip(int(train_test_split * self.raw_sentences.cardinality().numpy()))
+        train_size = int(train_test_split * shuffled_sentences.cardinality().numpy())
+        val_size = int(0.5 * (1 - train_test_split) * shuffled_sentences.cardinality().numpy())
+        test_size = int(0.5 * (1 - train_test_split) * shuffled_sentences.cardinality().numpy())
+
+
+        self.train_raw = shuffled_sentences.take(train_size)
+        self.test_raw = shuffled_sentences.skip(train_size)
+        self.valid_raw = self.test_raw.skip(test_size)
+        self.test_raw = self.test_raw.take(test_size)
+
+        self.test_raw.save("TEST DATA/")
+
+    def make_batches(self, batch_size):
 
         return ((
-            train_raw
+            self.train_raw
             .shuffle(settings.BUFFER_SIZE)
-            .batch(settings.BATCH_SIZE)
+            .batch(batch_size)
             .map(self.prepare_batch, tf.data.AUTOTUNE)
             .prefetch(buffer_size=tf.data.AUTOTUNE)
             ),
             
             (
-            test_raw
+            self.valid_raw
             .shuffle(settings.BUFFER_SIZE)
             .batch(settings.BATCH_SIZE)
             .map(self.prepare_batch, tf.data.AUTOTUNE)
