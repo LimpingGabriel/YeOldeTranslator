@@ -29,7 +29,7 @@ def train_model(dataset, parameters):
     output = t((src, tar))
     settings.logger.debug("Loaded sample data into model.")
 
-    learning_rate = CustomSchedule(settings.TRANSFORMER_D_MODEL)
+    learning_rate = CustomSchedule(parameters["d_model"])
     optimizer = tf.keras.optimizers.Adam(learning_rate, beta_1=0.9, beta_2=0.98,
                                      epsilon=1e-9)
     settings.logger.debug("Created custom learning rate.")
@@ -91,9 +91,9 @@ def train_model(dataset, parameters):
 
     except tf.errors.ResourceExhaustedError:
         settings.logger.warn("OOM Error. Skipping architecture.")
-        val_acc = -1
-        val_loss = 10000
-        val_bleu = -1
+        val_acc = "N/A"
+        val_loss = "N/A"
+        val_bleu = "N/A"
     
     return {
        "val_loss": val_loss,

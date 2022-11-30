@@ -11,13 +11,13 @@ if __name__ == "__main__":
     dataset.make_split(0.98)
 
     all_parameters = {
-        "batch_size": [256, 16, 32, 64],
-        "num_layers": [1, 2, 4, 6],
-        "d_model": [1, 32, 64, 128, 256, 512],
-        "dff": [1, 64, 128, 256, 512, 1024, 2048],
-        "num_heads": [1, 2, 4, 8],
-        "dropout": [0.1],
-        "epochs" : [1, 300]
+        "batch_size": [64, 32],
+        "num_layers": [6, 4],
+        "d_model": [256, 128],
+        "dff": [512, 256],
+        "num_heads": [16, 8],
+        "dropout": [0.3, 0.1],
+        "epochs" : [50, 200]
         }
 
     
@@ -25,8 +25,11 @@ if __name__ == "__main__":
     f=open("GridSearch.txt", "a")
     settings.logger.debug("Opened GridSearch.txt.")
 
-    for parameters in (dict(zip(all_parameters.keys(), values)) for values in product(*all_parameters.values())):
+    options = list((dict(zip(all_parameters.keys(), values)) for values in product(*all_parameters.values())))
+    i = 1
+    for parameters in options:
         settings.logger.info("Using hyperparameters " + str(parameters))
+        settings.logger.info("Model {}/{}.".format(i, len(options)))
         out = train_model(dataset, parameters)
         parameters["val_loss"] = out["val_loss"]
         parameters["val_acc"] = out["val_acc"]
@@ -36,6 +39,8 @@ if __name__ == "__main__":
         results.append(parameters)
 
         f.write(str(parameters))
+        f.write("\n")
         f.flush()
+        i += 1
 
     f.close()
