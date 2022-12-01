@@ -14,7 +14,9 @@ Final project for McGill AI Society Intro to ML Bootcamp (Fall 2022).
 
 Run this file on its own to load in the best (according to BLEU score) pre-trained model. Try your hand at Shakespeareify-ing your sentences!
 
+### app.py
 
+Run this file to use a (primitive) flask web demo with an input and a test box. 
 
 # Credits and Attribution
 
@@ -27,6 +29,7 @@ The following resources were extremely informative and were used in part to crea
 [Subword tokenizers](https://www.tensorflow.org/text/guide/subwords_tokenizer)
 
 The following papers were useful in gaining understanding of transformer-based models:
+
 [Training Tips for the Transformer Model](https://ufal.mff.cuni.cz/pbml/110/art-popel-bojar.pdf)
 
 [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
