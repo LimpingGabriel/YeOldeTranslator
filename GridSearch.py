@@ -11,13 +11,13 @@ if __name__ == "__main__":
     dataset.make_split(0.98)
 
     all_parameters = {
-        "batch_size": [64, 32],
-        "num_layers": [6, 4],
+        "batch_size": [32],
+        "num_layers": [6],
         "d_model": [256, 128],
-        "dff": [512, 256],
-        "num_heads": [16, 8],
-        "dropout": [0.3, 0.1],
-        "epochs" : [50, 200]
+        "dff": [1024, 512, 256],
+        "num_heads": [8],
+        "dropout": [0.3],
+        "epochs" : [200]
         }
 
     
