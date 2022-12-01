@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="titles">
+    <div style="width: 50%; display: inline-block;">
+        <h3>Original text</h3>
+    </div>
+    <div style="width: 50%; display: inline-block;">
+        <h3>Shakespearean text</h3>
+    </div>
+</div>
+<div id='previous'>
+    {% for translation in translations %}
+    <div class="pair">
+        <div class="translation" , id="previous_input">
+            <p>{{ translation['input'] }}</p>
+        </div>
+        <div class="translation" , id="previous_output">
+            <p>{{ translation['output'] }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <br>
+</div>
+<form method="post">
+    <textarea name="content"
+              placeholder="Enter your sentence here"
+              rows="15"
+              cols="60">{{ request.form['content'] }}</textarea>
+    <br>
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}

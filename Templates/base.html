@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - FlaskApp</title>
+    <style>
+        .pair {
+            display: flex; 
+        }
+
+        #titles {
+            display: flex;
+        }
+        #titles div {
+            display: inline-block;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 50%;
+            height: auto;
+            border: 2px solid black;
+        }
+
+        .pair .translation {
+            display: inline-block;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 50%;
+            height: auto;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <hr>
+    <div class="content">
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>
