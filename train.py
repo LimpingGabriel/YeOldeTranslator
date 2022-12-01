@@ -63,14 +63,34 @@ def train_model(dataset, parameters):
         
         settings.logger.debug("Calculated val_loss as: {}".format(val_loss))
         settings.logger.debug("Calculated val_acc as: {}".format(val_acc))
+        
+
+        reference_corpus = []
+        candidate_corpus = []
+
+        sentences = dataset.test_raw.batch(1).take(dataset.test_raw.cardinality())
+        settings.logger.debug("Batched {} sentences for BLEU scoring.".format(dataset.test_raw.cardinality()))
+
+        
+        ref_tensors = tf.concat([reference for _, reference in sentences], 0)
+        settings.logger.debug("Loaded reference candidate tensors.")
+        candidates = [
+            ex(tf.reshape(_, ())).numpy().decode("utf-8").split(" ") for _ in 
+            [_ for _, reference in sentences][:min(30, dataset.test_raw.cardinality())]]
+
+        settings.logger.debug("Loaded translation sample sentences for BLEU scoring.")
+
+        tokenized_ref = dataset.tokenizers.src.tokenize(ref_tensors)
+        detokenized_ref = dataset.tokenizers.src.detokenize(tokenized_ref)
+        references = [r.decode("utf-8").split(" ") for r in detokenized_ref.numpy()[:len(candidates)]]
+        
+        
+        val_bleu = corpus_bleu(references, candidates)
+        settings.logger.debug("Calculated BLEU score: {}.".format(val_bleu))
+        input()
 
     except tf.errors.ResourceExhaustedError:
         settings.logger.warn("OOM Error. Skipping architecture.")
-        val_acc = "N/A"
-        val_loss = "N/A"
-        val_bleu = "N/A"
-    except KeyboardInterrupt:
-        settings.logger.warn("Interrupt. Skipping architecture.")
         val_acc = "N/A"
         val_loss = "N/A"
         val_bleu = "N/A"
