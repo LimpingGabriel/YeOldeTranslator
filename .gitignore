@@ -4,13 +4,11 @@
 *.pyproj
 *.user
 *.pyc
-*.pb
 *.p
 *.index
-*.data-*
-*.txt
 *.zip
 *.pb
 *.metadata
 *.snapshot
 
+Models/transformer_batch_size-32__num_layers-6__d_model-128__dff-512__num_heads-8__dropout-0.3__epochs-50_/*
