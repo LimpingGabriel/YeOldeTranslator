@@ -4,7 +4,7 @@ import tensorflow as tf
 from flask import Flask, render_template, request, url_for, flash, redirect
 
 tfmodel = tf.saved_model.load(
-    "C:\\Users\\Benjamin\\OneDrive\\University\\Undergraduate\\MAIS 202\\YeOldeTranslator\\transformer_batch_size-64__num_layers-4__d_model-128__dff-256__num_heads-8__dropout-0.3__epochs-200_",
+    "models/transformer_batch_size-64__num_layers-4__d_model-128__dff-256__num_heads-8__dropout-0.3__epochs-200_",
     )
 
 def get_translation(message):

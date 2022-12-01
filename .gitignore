@@ -1,5 +1,4 @@
 .vs/
-Datasets/
 
 *.sln
 *.pyproj
@@ -14,3 +13,4 @@ Datasets/
 *.pb
 *.metadata
 *.snapshot
+
